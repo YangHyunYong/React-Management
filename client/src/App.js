@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper"; //컴포넌트 외부를 감싸는 컴포넌트
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme) => ({
   root: {
@@ -18,16 +19,30 @@ const styles = (theme) => ({
   },
   table: {
     minWidth: 1080,
+  },
+  progress: {
+    margin: theme.spacing.unit * 2
   }
 });
 
+/*
+1. constructor()
+2. componentWillMount()
+3. render()
+4. componentDidMount()
+
+props or state => shouldComponentUpdate() - 다시 render()를 호출, 재구성
+
+*/
 
 class App extends Component {
   state = {
-    customers: ""
+    customers: "",
+    completed: 0
   }
   //데이터 받아오는 작업 수행
   componentDidMount(){
+    this.timer = setInterval(this.progress,20);
     this.callApi()
     .then(res => this.setState({customers: res}))
     .catch(err=>console.log(err));
@@ -37,6 +52,11 @@ class App extends Component {
     const response = await fetch('/api/customers');
     const body = await response.json();
     return body;
+  }
+
+  progress = () => {
+    const{completed} = this.state;
+    this.setState({completed: completed >= 100 ? 0 : completed + 1});
   }
 
   render() {
@@ -67,7 +87,13 @@ class App extends Component {
                   job={c.job}
                 />
               );
-            }) : ""}
+            }) : 
+            <TableRow>
+              <TableCell colspan='6' align='center'>
+                <CircularProgress className={classes.progress} variant='determinate' value={this.state.completed}/>
+              </TableCell>
+            </TableRow>
+            }
           </TableBody>
         </Table>
       </Paper>
