@@ -37,9 +37,23 @@ props or state => shouldComponentUpdate() - 다시 render()를 호출, 재구성
 */
 
 class App extends Component {
-  state = {
-    customers: "",
-    completed: 0
+
+  constructor(props){
+    super(props);
+    this.state = {
+      customers: '',
+      completed: 0
+    }
+  }
+
+  stateRefresh = () =>{
+    this.setState({
+      customers: '',
+      completed: 0
+    });
+    this.callApi()
+    .then(res => this.setState({customers: res}))
+    .catch(err=>console.log(err));
   }
   //데이터 받아오는 작업 수행
   componentDidMount(){
@@ -99,7 +113,7 @@ class App extends Component {
           </TableBody>
         </Table>
       </Paper>
-      <CustomerAdd/>
+      <CustomerAdd stateRefresh={this.stateRefresh}/>
       </div>
     );
   }
