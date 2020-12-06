@@ -1,7 +1,0 @@
-{
-    "host": "manage.c294k1lzukyy.us-east-2.rds.amazonaws.com",
-    "user": "admin",
-    "password": "gusdyd2Wkd!",
-    "port": 3306,
-    "database": "management"
-}
